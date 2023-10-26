@@ -1,0 +1,658 @@
+<?php
+session_start();
+
+$hostname = "localhost";
+$username = "root";
+
+// Create a connection to the database.
+$database = "unawa";
+$connection = mysqli_connect($hostname, $username, '', $database);
+
+// Check the connection.
+if (!$connection) {
+    die("Connection failed: " . mysqli_connect_error());
+}
+
+// Check if the form was submitted
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Handle form data
+    $name = $_POST['name'];
+    $email = $_POST['email'];
+    $signTitle = $_POST['sign-title'];
+    $signDescription = $_POST['sign-description'];
+
+    // Handle file upload
+    $targetDirectory = 'signphoto/'; // Use a relative directory path
+    $targetFile = $targetDirectory . basename($_FILES["photo"]["name"]);
+    $uploadOk = 1;
+    $imageFileType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
+
+    // Check if the file is an actual image
+    $check = getimagesize($_FILES["photo"]["tmp_name"]);
+    if ($check === false) {
+        echo "File is not an image.";
+        $uploadOk = 0;
+    }
+
+    // Check if file already exists
+    if (file_exists($targetFile)) {
+        echo "File already exists.";
+        $uploadOk = 0;
+    }
+
+    // Check file size (you can set your own size limit)
+    if ($_FILES["photo"]["size"] > 5000000) {
+        echo "File is too large.";
+        $uploadOk = 0;
+    }
+
+    // Allow only certain file formats (adjust as needed)
+    if ($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg") {
+        echo "Only JPG, JPEG, and PNG files are allowed.";
+        $uploadOk = 0;
+    }
+
+    if ($uploadOk == 0) {
+        echo "File was not uploaded.";
+    } else {
+        // Move the uploaded file to the specified directory
+        if (move_uploaded_file($_FILES["photo"]["tmp_name"], $targetFile)) {
+            // Insert data into the database, including the description
+            $filename = basename($_FILES["photo"]["name"]);
+            $sql = "INSERT INTO signpending (name, email, filename, description) VALUES ('$name', '$email', '$filename', '$signDescription')";
+            if (mysqli_query($connection, $sql)) {
+                echo "Data and file uploaded successfully.";
+            } else {
+                echo "Error: " . $sql . "<br>" . mysqli_error($connection);
+            }
+        } else {
+            echo "There was an error uploading the file.";
+        }
+    }
+}
+
+// Close the database connection
+mysqli_close($connection);
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Submit Sign</title>
+    <style>
+        @import url("https://fonts.googleapis.com/css?family=Poppins:400, 700");
+
+        @font-face {
+            font-family: "VAGRoundedStd-Bold";
+            font-style: normal;
+            font-weight: 700;
+            src: url("assets/fonts/VAGRoundedStd-Bold.otf") format("opentype");
+        }
+
+        @font-face {
+            font-family: "ArialRoundedMTBoldRegular";
+            font-style: normal;
+            font-weight: 400;
+            src: url("assets/fonts/ArialRoundedMTBoldRegular.ttf") format("truetype");
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background-color: white;
+            z-index: 100;
+        }
+
+        .navbar-container {
+            background-color: white;
+            height: 106px;
+            left: 0;
+            position: absolute;
+            width: 100%;
+        }
+
+        .nav-buttons {
+            align-items: flex-start;
+            display: flex;
+            gap: 30px;
+            height: 25px;
+            left: 474px;
+            min-width: 503px;
+            position: absolute;
+            top: 40px;
+            text-decoration: none !important;
+        }
+
+        .home {
+            cursor: pointer;
+            letter-spacing: 0;
+            line-height: normal;
+            min-height: 24px;
+            min-width: 49px;
+            font-family: "Poppins";
+            font-weight: bold;
+            font-size: 16px;
+            color: #333333;
+            text-decoration: none !important;
+        }
+
+        .about {
+            cursor: pointer;
+            align-self: flex-end;
+            letter-spacing: 0;
+            line-height: normal;
+            min-height: 24px;
+            min-width: 51px;
+            font-family: "Poppins";
+            font-weight: bold;
+            font-size: 16px;
+            color: #333333;
+        }
+
+        .fsl-translator {
+            cursor: pointer;
+            letter-spacing: 0;
+            line-height: normal;
+            margin-top: 0.13px;
+            min-height: 24px;
+            min-width: 116px;
+            font-family: "Poppins";
+            font-weight: bold;
+            font-size: 16px;
+            color: #333333;
+        }
+
+        .learn-button {
+            align-items: center;
+            display: inline-flex;
+            gap: 8px;
+            justify-content: center;
+            margin-top: 0.13px;
+            position: relative;
+            font-family: "Poppins";
+            font-weight: bold;
+            font-size: 16px;
+            color: #333333;
+        }
+
+        .akar-iconschevron-down {
+            height: 12px;
+            position: relative;
+            width: 12px;
+        }
+
+        .learn {
+            cursor: pointer;
+            letter-spacing: 0;
+            line-height: normal;
+            margin-top: -1px;
+            position: relative;
+            width: fit-content;
+            font-family: "Poppins";
+            font-weight: bold;
+            font-size: 16px;
+            color: #333333;
+        }
+
+        .contact-us {
+            cursor: pointer;
+            align-self: center;
+            letter-spacing: 0;
+            line-height: normal;
+            margin-bottom: 1.87px;
+            min-height: 21px;
+            width: 93px;
+            font-family: "Poppins";
+            font-weight: bold;
+            font-size: 16px;
+            color: #333333";
+
+        }
+
+        .logo {
+            cursor: pointer;
+            height: 56px;
+            left: 35px;
+            object-fit: cover;
+            position: absolute;
+            width: 160px;
+            margin-top: 25px;
+        }
+
+        .submit-sign-page .flex-container {
+            align-items: flex-start;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            position: relative;
+        }
+
+        .user-profile {
+            height: 39px;
+            left: 1390px;
+            position: absolute;
+            top: 35px;
+            width: 39px;
+        }
+
+        .submit-sign-page {
+            align-items: center;
+            background-color: white;
+            display: flex;
+            flex-direction: column;
+            height: auto;
+            overflow: hidden;
+        }
+
+        .span {
+            letter-spacing: 2.85px;
+        }
+
+        .span0 {
+            color: #be1e2d;
+            letter-spacing: 2.85px;
+            font-family: "VAGRoundedStd-Bold";
+            font-size: 80px;
+            font-weight: 700px;
+        }
+
+        .span1 {
+            color: #333333;
+            letter-spacing: 2.85px;
+            font-family: "VAGRoundedStd-Bold";
+            font-size: 80px;
+            font-weight: 700px;
+        }
+
+        .span2 {
+            color: #21409a;
+            letter-spacing: 2.85px;
+            font-family: "VAGRoundedStd-Bold";
+            font-size: 80px;
+            font-weight: 700px;
+        }
+
+        .span3 {
+            color: #ffcc00;
+            letter-spacing: 2.85px;
+            font-family: "VAGRoundedStd-Bold";
+            font-size: 80px;
+            font-weight: 700px;
+        }
+
+        .flex-row {
+            align-items: center;
+            display: flex;
+            gap: 20px;
+            height: 636px;
+            margin-left: 50px;
+            margin-top: 30px;
+            width: 1261px;
+        }
+
+        .title {
+            align-items: flex-start;
+            display: flex;
+            flex-direction: column;
+            gap: 13px;
+            min-height: 612px;
+            width: 607px;
+        }
+
+        .flex-container-151 {
+            top: 100px;
+            width: 603px;
+        }
+
+        .text {
+            font-family: "VAGRoundedStd-Bold";
+            font-size: 80px;
+            color: #333333;
+            align-self: stretch;
+            letter-spacing: 0;
+            line-height: normal;
+            position: relative;
+        }
+
+        .text-1 {
+            align-self: stretch;
+            letter-spacing: 0;
+            line-height: normal;
+            position: relative;
+        }
+
+        .join-us-in-enriching {
+            font-family: "Poppins";
+            font-weight: normal;
+            font-size: 19px;
+            color: #545454;
+            letter-spacing: 0;
+            line-height: 34.4px;
+            margin-top: 100px;
+            width: 564px;
+        }
+
+        .submit-form {
+            width: 80%;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Form group styles (for labeling and input) */
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            font-weight: bold;
+        }
+
+        .textarea-with-upload {
+            position: relative;
+        }
+
+        .textarea-with-upload textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            height: 31vh !important;
+            resize: none;
+        }
+
+        .textarea-with-upload label {
+            font-family: "Poppins";
+            font-weight: normal;
+            font-size: 15px;
+            color: #8B9BCA;
+            position: absolute;
+            bottom: 35px;
+            align-items: center;
+            right: 30px;
+        }
+
+        .textarea-with-upload input[type="file"] {
+            position: absolute;
+            bottom: 10px;
+            /* Adjust the positioning as needed */
+            left: 120px;
+            /* Adjust the positioning as needed */
+            font-size: 14px;
+            opacity: 0;
+            /* Hide the input element */
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        /*.form-group textarea {
+resize: vertical;
+}*/
+
+        /* File input styles */
+        .form-group input[type="file"] {
+            display: block;
+            font-size: 14px;
+        }
+
+        /* Submit button styles */
+        button[type="submit"] {
+            font-family: "Poppins";
+            font-weight: bold;
+            letter-spacing: 2px;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 10px;
+            font-size: 20px;
+            cursor: pointer;
+            width: 84%;
+            padding: 10px;
+            margin-top: 25px;
+            margin-left: 100px;
+        }
+
+        button:hover {
+            background-color: #0e2356;
+        }
+
+        .button-container {
+            margin-left: 330px;
+        }
+
+        .submit-form {
+            width: 80%;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            margin-top: 10vh;
+        }
+
+        /* Form group styles (for labeling and input) */
+        .form-group {
+            margin-bottom: 1px;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group textarea {
+            height: 3%;
+            width: 80%;
+            padding: 10px;
+            margin-top: 25px;
+            margin-bottom: 1px;
+            margin-left: 45px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            font-size: 16px;
+        }
+
+        /* File input styles */
+        .form-group input[type="file"] {
+            background-image: url('assets/assets-svg/user-profile.svg');
+            background-repeat: no-repeat;
+            display: block;
+            font-size: 14px;
+        }
+
+
+        /* Submit button styles */
+        button[type="submit"] {
+            background-color: #21409a;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            cursor: pointer;
+            width: auto;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #1b347e;
+        }
+
+
+        #name::placeholder {
+            color: #9B9988;
+            font-family: "Poppins";
+        }
+
+        #email::placeholder {
+            color: #9B9988;
+            font-family: "Poppins";
+
+        }
+
+        #sign-title::placeholder {
+            color: #9B9988;
+            font-family: "Poppins";
+        }
+
+        #sign-description::placeholder {
+            color: #9B9988;
+            font-family: "Poppins";
+        }
+
+        .form-group:focus {
+            color: yellow;
+        }
+
+        .photo-upload {
+            align-items: flex-start;
+            background-color: #F4F5FA;
+            border: 1px dashed;
+            border-color: #8B9BCA;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            left: 55px;
+            min-height: 70px;
+            padding: 28px 34px;
+            position: absolute;
+            top: 131px;
+            width: 70px;
+        }
+
+        .add-photo {
+            align-self: center;
+            margin-top: 10px;
+        }
+
+        .video-upload {
+            align-items: flex-start;
+            background-color: #F4F5FA;
+            border: 1px dashed;
+            border-color: #8B9BCA;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            left: 205px;
+            min-height: 70px;
+            padding: 28px 34px;
+            position: absolute;
+            top: 131px;
+            width: 70px;
+        }
+
+        .add-video {
+            align-self: center;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+
+    <form class="submit-form" method="post" action="" enctype="multipart/form-data">
+
+        <div class="form-group">
+            <input type="text" id="name" name="name" placeholder="Name">
+        </div>
+
+        <div class="form-group">
+            <input type="email" id="email" name="email" placeholder="Email">
+        </div>
+
+        <div class="form-group">
+            <input type="text" id="sign-title" name="sign-title" placeholder="Sign Title (Required)" required>
+        </div>
+
+        <div class="form-group">
+            <div class="textarea-with-upload">
+                <textarea id="sign-description" name="sign-description" placeholder="Sign Description" rows="4"></textarea>
+                <div class="photo-upload">
+                    <label for="photo">Add photo</label>
+                    <img src="assets\assets-png\add-photo.png" alt="" class="add-photo" />
+                    <input type="file" id="photo" name="photo" accept="image/*">
+                </div>
+                <div class="video-upload">
+                    <label for="video">Add video</label>
+                    <img src="assets\assets-png\add-video.png" alt="" class="add-video">
+                    <input type="file" id="video" name="video" accept="video/*">
+                </div>
+            </div>
+        </div>
+        <div class="button-container">
+            <button type="submit">SUBMIT</button>
+        </div>
+    </form>
+    </div>
+    <footer class="footer">
+        <div class="overlap-group-3">
+            <div class="group-34">
+                <div class="group-29">
+
+                    <p class="unawa-translates-po">
+                        UNAWA translates spoken and sign language, fostering inclusive communication with advanced technology.
+                    </p>
+                </div>
+                <div class="group-33">
+                    <div class="group-30">
+                        <div class="menu">MENU</div>
+                        <div class="flex-container-14512 flex-container">
+                            <div class="text">
+                                <span>Home</span>
+                            </div>
+                            <div class="text">
+                                <span>About</span>
+                            </div>
+                            <div class="text">
+                                <span>Contact Us</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="group-31">
+                        <div class="features">FEATURES</div>
+                        <div class="flex-container-14516 flex-container">
+                            <div class="text">
+                                <span>FSL Translator</span>
+                            </div>
+                            <div class="text">
+                                <span>E-Learn</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="group-32">
+                        <div class="other">OTHER</div>
+                        <div class="flex-container-14518 flex-container">
+                            <div class="text">
+                                <span>Terms and Conditions</span>
+                            </div>
+                            <div class="text">
+                                <span>Privacy Policy</span>
+                            </div>
+                            <div class="text">
+                                <span>Help Center</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <img class="line-1" src="assets\assets-svg\line-1.svg" />
+            <p class="copyright-2023-una">© Copyright 2023 unawa. All rights reserved.</p>
+        </div>
+</body>
+
+</html>
+</body>
+
+</html>
