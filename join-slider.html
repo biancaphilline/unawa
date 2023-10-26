@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign Up</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css?family=Poppins:400, 700");
+
+      @font-face {
+        font-family: "VAGRoundedStd-Bold";
+        font-style: normal;
+        font-weight: 700;
+        src: url("assets/fonts/VAGRoundedStd-Bold.otf") format("opentype");
+      }
+
+      @font-face {
+        font-family: "ArialRoundedMTBoldRegular";
+        font-style: normal;
+        font-weight: 400;
+        src: url("assets/fonts/ArialRoundedMTBoldRegular.ttf")
+          format("truetype");
+      }
+
+      .navbar {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        background-color: white;
+        z-index: 100;
+      }
+
+      .navbar-container {
+        background-color: white;
+        height: 106px;
+        left: 0;
+        position: absolute;
+        width: 100%;
+      }
+
+      .nav-buttons {
+        align-items: flex-start;
+        display: flex;
+        gap: 30px;
+        height: 25px;
+        left: 474px;
+        min-width: 503px;
+        position: absolute;
+        top: 40px;
+        text-decoration: none !important;
+      }
+
+      .home {
+        cursor: pointer;
+        letter-spacing: 0;
+        line-height: normal;
+        min-height: 24px;
+        min-width: 49px;
+        font-family: "Poppins";
+        font-weight: bold;
+        font-size: 16px;
+        color: #333333;
+        text-decoration: none !important;
+      }
+
+      .about {
+        cursor: pointer;
+        align-self: flex-end;
+        letter-spacing: 0;
+        line-height: normal;
+        min-height: 24px;
+        min-width: 51px;
+        font-family: "Poppins";
+        font-weight: bold;
+        font-size: 16px;
+        color: #333333;
+      }
+
+      .fsl-translator {
+        cursor: pointer;
+        letter-spacing: 0;
+        line-height: normal;
+        margin-top: 0.13px;
+        min-height: 24px;
+        min-width: 116px;
+        font-family: "Poppins";
+        font-weight: bold;
+        font-size: 16px;
+        color: #333333;
+      }
+
+      .learn-button {
+        align-items: center;
+        display: inline-flex;
+        gap: 8px;
+        justify-content: center;
+        margin-top: 0.13px;
+        position: relative;
+        font-family: "Poppins";
+        font-weight: bold;
+        font-size: 16px;
+        color: #333333;
+      }
+
+      .akar-iconschevron-down {
+        height: 12px;
+        position: relative;
+        width: 12px;
+      }
+
+      .learn {
+        cursor: pointer;
+        letter-spacing: 0;
+        line-height: normal;
+        margin-top: -1px;
+        position: relative;
+        width: fit-content;
+        font-family: "Poppins";
+        font-weight: bold;
+        font-size: 16px;
+        color: #333333;
+      }
+
+      .contact-us {
+        cursor: pointer;
+        align-self: center;
+        letter-spacing: 0;
+        line-height: normal;
+        margin-bottom: 1.87px;
+        min-height: 21px;
+        width: 93px;
+        font-family: "Poppins";
+        font-weight: bold;
+        font-size: 16px;
+        color: #333333";
+      }
+
+      .logo {
+        cursor: pointer;
+        height: 56px;
+        left: 35px;
+        object-fit: cover;
+        position: absolute;
+        width: 160px;
+        margin-top: 25px;
+      }
+
+      .sign-up {
+        align-items: flex-start;
+        background-color: white;
+        display: flex;
+        flex-direction: column;
+        gap: 142px;
+        height: 1739px;
+        overflow: hidden;
+        width: 100%;
+      }
+
+      .join-now .signup{
+        display: flex;
+        position: absolute;
+        align-items: center;
+      }
+
+      .login-bg {
+        height: 1024px;
+        left: 0;
+        object-fit: cover;
+        position: absolute;
+        top: 47px;
+        width: 100%;
+      }
+
+      .container {
+        background-color: white;
+        border: 1px solid;
+        border-color:#9b9988;
+        border-radius: 20px;
+        height: 824px;
+        left: 420px;
+        position: absolute;
+        top: 355px;
+        width: 600px;
+        align-items: center;
+      }
+
+      .welcome-banner {
+        align-items: flex-start;
+        background-image: url('assets/assets-png/logo-3.png');
+        background-position: 50% 50%;
+        background-size: contain;
+        background-repeat: no-repeat;
+        height: 209px;
+        padding: 28px 72px;
+      }
+
+      .title {
+        font-family: "ArialRoundedMTBoldRegular";
+        font-weight: normal;
+        color: #1b347e;
+        letter-spacing: 0.75px;
+        line-height: normal;
+        text-align: center;
+      }
+
+      .signup-part {
+        align-items: center;
+        margin-top: 225px;
+        margin-left: 125px;
+        width: 258px;
+        align-self: center;
+      }
+
+      .signup-text {
+        color: #9b998899;
+        font-family: "ArialRoundedMTBoldRegular";
+        font-size: 25px;
+        font-weight: 400;
+        letter-spacing: 0.75px;
+        align-items: center;
+        margin-left: 125px;
+      }
+
+    </style>
+  </head>
+
+  <!--
+  <?php
+  $hostname = "localhost";
+  $username = "root";
+
+  // Create a connection to the database.
+  $database = "unawa";
+  $connection = mysqli_connect($hostname, $username, '', $database);
+
+  // Check the connection.
+  if (!$connection) {
+      die("Connection failed: " . mysqli_connect_error());
+  }
+
+  // SIGN UP
+  
+  if (isset($_POST['signup'])) {
+    $name = $_POST['name'];
+    $email = $_POST['email'];
+    $password = $_POST['password'];
+    $confirmPassword = $_POST['confirm-password'];  
+
+    if (
+        strlen($password) < 8 ||                // Minimum length of 8 characters
+        !preg_match('/\d/', $password) ||       // Contains at least one digit
+        !preg_match('/[A-Z]/', $password)       // Contains at least one uppercase letter
+    ) {
+        echo "<script>alert('Password complexity requirements not met.');</script>";
+    } else {
+        if ($password !== $confirmPassword) {
+            echo "<script>alert('Password and Confirm Password do not match.');</script>";
+        } else {
+            $checkQuery = "SELECT * FROM users WHERE email = '$email'";
+            $result = mysqli_query($connection, $checkQuery);
+
+            if (mysqli_num_rows($result) > 0) {
+                echo "<script>alert('Email already registered.');</script>";
+            } else {
+                $insertQuery = "INSERT INTO users (Name, Email, Password) VALUES ('$name', '$email', '$password')";
+
+                if (mysqli_query($connection, $insertQuery)) {
+                     echo "<script>alert('Registration successful.');</script>";
+                } else {
+                    echo "Error: " . mysqli_error($connection);
+                }
+            }
+        }
+    }
+  }
+
+    // LOGIN
+  if (isset($_POST['login'])) {
+    $loginEmail = $_POST['login-email'];
+    $loginPassword = $_POST['login-password'];
+
+    // Query the database to check if the user exists
+    $query = "SELECT * FROM users WHERE email = '$loginEmail' AND password = '$loginPassword'";
+    $result = mysqli_query($connection, $query);
+
+    if (mysqli_num_rows($result) == 1) {
+        // User authentication successful
+        echo "<script>alert('Login successful. Welcome, $loginEmail!');</script>";
+    } else {
+        // User authentication failed
+        echo "<script>alert('Login failed. Please check your email and password.');</script>";
+    }
+  }
+
+  mysqli_close($connection);
+    ?>
+-->
+  <body>
+    <form class="join-now screen" name="form1" action="form1" method="post">
+      <img class="login-bg" src="assets/assets-png/login-bg.png" />
+
+      <!--NAVBAR-->
+      <div class="navbar">
+        <div class="navbar-container">
+          <div class="nav-buttons">
+            <a href="index.php" class="home">Home</a>
+            <div class="fsl-translator">FSL Translator</div>
+            <div class="learn-button">
+              <div class="learn">Learn</div>
+              <img
+                class="akar-iconschevron-down"
+                src="assets\assets-svg\akar-icons-chevron-down.svg"
+              />
+            </div>
+            <div class="about">About</div>
+            <div class="contact-us">Contact Us</div>
+          </div>
+          <a href="index.php">
+            <img class="logo" src="assets\assets-png\logo.png" />
+          </a>
+        </div>
+      </div>
+
+      <!--FORMS-->
+      <div class="container">
+        <div class="welcome-banner">
+          <h1 class="title">Welcome to</h1>
+        </div>
+          <div class="signup-text">Sign Up</div>
+        <form action="join.php" method="post">
+          <label for="name">Name</label>
+          <input type="text" id="name" name="name" required />
+
+          <label for="email">Email</label>
+          <input type="text" id="email" name="email" required />
+
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" required />
+
+          <label for="confirm-password">Confirm Password</label>
+          <input type="password" id="confirm-password" name="confirm-password" required />
+
+          <button type="submit" name="signup">Sign Up</button>
+        </form>
+
+        <p class="by-signing-up-you-a">
+          <span>By singing up, you agree to unawa's</span>
+          <span>Terms of Services</span>
+          <span>&amp;</span>
+          <span>Privacy Policy</span>
+          <span>.</span>
+        </p>
+    </form>
+  </body>
+</html>
