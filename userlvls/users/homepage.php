@@ -59,7 +59,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (move_uploaded_file($_FILES["photo"]["tmp_name"], $targetFile)) {
             // Insert data into the database, including the description
             $filename = basename($_FILES["photo"]["name"]);
-            $sql = "INSERT INTO signpending (name, email, filename, description) VALUES ('$name', '$email', '$filename', '$signDescription')";
+            $sql = "INSERT INTO signpending (name, email, filename, title, description) VALUES ('$name', '$email', '$filename', '$signTitle', '$signDescription')";
             if (mysqli_query($connection, $sql)) {
                 echo "Data and file uploaded successfully.";
             } else {
