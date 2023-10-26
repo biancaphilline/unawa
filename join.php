@@ -59,17 +59,24 @@ if (isset($_POST['login'])) {
   $loginEmail = $_POST['login-email'];
   $loginPassword = $_POST['login-password'];
 
-  // Query the database to check if the user exists
-  $query = "SELECT * FROM users WHERE email = '$loginEmail' AND password = '$loginPassword'";
-  $result = mysqli_query($connection, $query);
+  // Query the "users" table
+  $userQuery = "SELECT * FROM users WHERE email = '$loginEmail' AND password = '$loginPassword'";
+  $userResult = mysqli_query($connection, $userQuery);
 
-  if (mysqli_num_rows($result) == 1) {
+  // Query the "admin" table
+  $adminQuery = "SELECT * FROM admin WHERE email = '$loginEmail' AND password = '$loginPassword'";
+  $adminResult = mysqli_query($connection, $adminQuery);
+
+  if (mysqli_num_rows($userResult) == 1) {
     // User authentication successful
-
     header("Location: userlvls/users/homepage.php");
     exit;
+  } elseif (mysqli_num_rows($adminResult) == 1) {
+    // Admin authentication successful
+    header("Location: userlvls/admin/homepage.php");
+    exit;
   } else {
-    // User authentication failed
+    // Authentication failed
     echo "<script>alert('Login failed. Please check your email and password.');</script>";
   }
 }
